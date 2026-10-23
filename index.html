@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>الشحنة الكهربائية – فيزياء العاشر</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=Almarai:wght@400;700;800&display=swap">
+<style>
+/* Layout: green school band with gold Kufic crest → two large doors → the opened panel below; small fixed credit strip */
+:root{
+  --bg:#f2f5f1; --surface:#ffffff; --surface-2:#e8efe9; --fg:#14231c; --muted:#53655c; --line:#cfdcd3;
+  --green:#0f4632; --green-2:#17604a; --gold:#e5ad1c; --gold-ink:#8a6100; --gold-soft:#fbf1d3;
+  --pos:#b8361f; --neg:#1f5fae; --ok:#1d7a4a; --bad:#b3261e;
+  --band-fg:#f2f7f3; --band-muted:#b8d3c5;
+  --f-display:"El Messiri","Almarai",Tahoma,sans-serif;
+  --f-body:"Almarai","Segoe UI",Tahoma,Arial,sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0b1813; --surface:#12241c; --surface-2:#183026; --fg:#e4eee8; --muted:#9fb5aa; --line:#27443a;
+  --green:#0d3527; --green-2:#1f6b52; --gold:#f0bb32; --gold-ink:#f0c457; --gold-soft:#2b2712;
+  --pos:#ff8a70; --neg:#7fb2ff; --ok:#5fd09a; --bad:#ff8a80; --band-fg:#f2f7f3; --band-muted:#a9c7b8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1813; --surface:#12241c; --surface-2:#183026; --fg:#e4eee8; --muted:#9fb5aa; --line:#27443a;
+  --green:#0d3527; --green-2:#1f6b52; --gold:#f0bb32; --gold-ink:#f0c457; --gold-soft:#2b2712;
+  --pos:#ff8a70; --neg:#7fb2ff; --ok:#5fd09a; --bad:#ff8a80; --band-fg:#f2f7f3; --band-muted:#a9c7b8; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.75;direction:rtl;padding-bottom:44px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.35;margin:0}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* hero band */
+.band{background:var(--green);color:var(--band-fg);position:relative;overflow:hidden}
+.band::before{content:"";position:absolute;inset:0;opacity:.13;
+  background-image:linear-gradient(var(--gold) 2px,transparent 2px),linear-gradient(90deg,var(--gold) 2px,transparent 2px);
+  background-size:44px 44px;mask-image:radial-gradient(ellipse at 50% 30%,#000 0,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 50% 30%,#000 0,transparent 70%)}
+.hero{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding-block:34px 40px}
+.crest{width:132px;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#ffffff14,#ffffff05 70%);border:2px solid #e5ad1c55;box-shadow:0 0 0 8px #ffffff08}
+.crest img{width:78px;height:auto}
+.school{font-family:var(--f-display);font-size:clamp(1.25rem,3.4vw,1.7rem);font-weight:600;color:var(--band-fg)}
+.school small{display:block;font-size:.62em;color:var(--band-muted);font-weight:500;letter-spacing:.02em}
+.title{font-size:clamp(1.55rem,5vw,2.55rem);font-weight:700;color:#f3c64a;margin-top:8px;max-width:30ch}
+.title span{display:block;font-size:.5em;color:var(--band-fg);font-weight:500;margin-top:4px}
+.motto{margin-top:6px;font-size:1rem;color:var(--band-muted);border-top:1px solid #ffffff22;padding-top:10px}
+
+/* doors */
+.doors{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:-26px;position:relative;z-index:2}
+.door{display:flex;align-items:center;gap:16px;text-align:right;background:var(--surface);color:var(--fg);border:2px solid var(--line);border-radius:18px;padding:18px 18px;cursor:pointer;box-shadow:0 10px 28px -18px #0f463288;transition:transform .18s,border-color .18s}
+.door:hover{transform:translateY(-3px);border-color:var(--gold)}
+
+.door .ic{flex:none;width:62px;height:62px;border-radius:16px;background:var(--green);display:grid;place-items:center}
+.door .ic svg{width:34px;height:34px}
+.door b{display:block;font-family:var(--f-display);font-size:1.3rem;font-weight:600}
+.door em{font-style:normal;color:var(--muted);font-size:.9rem}
+@media (max-width:620px){.doors{grid-template-columns:1fr}}
+
+/* panels */
+.panel{padding-block:30px 20px}
+.panel[hidden]{display:none}
+.phead{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:10px;border-bottom:2px solid var(--line);padding-bottom:12px;margin-bottom:22px}
+.phead h2{font-size:1.65rem;color:var(--fg)}
+.phead p{margin:0;color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.toc a{color:var(--fg);text-decoration:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 14px;font-size:.92rem}
+.toc a:hover{border-color:var(--gold)}
+
+/* mind map */
+.map{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px 16px 22px;overflow-x:auto}
+.map h3{font-size:1.1rem;color:var(--muted);margin-bottom:14px;font-weight:600}
+.mm{min-width:700px;display:flex;flex-direction:column;align-items:center}
+.mm .root{background:var(--green);color:#f3c64a;font-family:var(--f-display);font-size:1.3rem;padding:10px 26px;border-radius:999px;border:3px solid var(--gold)}
+.mm .stem{width:2px;height:20px;background:var(--gold)}
+.mm .branches{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;width:100%;position:relative;padding-top:20px}
+.mm .branches::before{content:"";position:absolute;top:0;right:12.5%;left:12.5%;height:2px;background:var(--gold)}
+.mm .br{position:relative;display:flex;flex-direction:column;gap:6px}
+.mm .br::before{content:"";position:absolute;top:-20px;right:50%;width:2px;height:20px;background:var(--gold)}
+.mm .bt{background:var(--gold-soft);border:2px solid var(--gold);border-radius:12px;padding:6px 10px;text-align:center;font-weight:700;font-family:var(--f-display)}
+.mm .bt small{display:block;font-family:var(--f-body);font-weight:500;color:var(--gold-ink);font-size:.78rem}
+.mm ul{list-style:none;margin:0;padding:0 14px 0 0;border-right:2px dashed var(--line);display:flex;flex-direction:column;gap:6px}
+.mm li{position:relative;background:var(--surface-2);border-radius:8px;padding:4px 10px;font-size:.88rem;line-height:1.55}
+.mm li::before{content:"";position:absolute;right:-16px;top:50%;width:14px;border-top:2px dashed var(--line)}
+@media (max-width:760px){.map{overflow:visible}.mm{min-width:0}.mm .branches{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 12px}.mm .branches::before,.mm .br::before{display:none}.mm .stem{height:14px}.mm .branches{padding-top:6px}}
+@media (max-width:440px){.mm .branches{grid-template-columns:minmax(0,1fr)}}
+
+/* topic sections */
+.topic{margin-top:30px;display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.topic>header{display:flex;align-items:center;gap:12px}
+.topic .no{font-family:var(--f-display);background:var(--green);color:#f3c64a;border-radius:10px;padding:2px 12px;font-size:1.05rem;direction:ltr;unicode-bidi:isolate}
+.topic h3{font-size:1.4rem}
+.cols{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:760px){.cols{grid-template-columns:minmax(0,1fr)}}
+.note{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.note ul{margin:0;padding-right:20px;display:flex;flex-direction:column;gap:6px}
+.note li::marker{color:var(--gold)}
+.term{background:var(--gold-soft);border-right:4px solid var(--gold);border-radius:10px;padding:10px 14px;margin-top:10px;font-size:.95rem}
+.term b{color:var(--gold-ink)}
+.warn{background:var(--surface-2);border-radius:10px;padding:10px 14px;font-size:.93rem;margin-top:10px}
+.warn b{color:var(--bad)}
+.pos{color:var(--pos);font-weight:700}.neg{color:var(--neg);font-weight:700}
+.fig{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:6px}
+.fig svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:.85rem;color:var(--muted);text-align:center}
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:.92rem}
+.chain span{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:3px 10px}
+.chain i{font-style:normal;color:var(--gold-ink);font-weight:700}
+table.tbl{width:100%;border-collapse:collapse;font-size:.93rem}
+.tbl th,.tbl td{border:1px solid var(--line);padding:6px 10px;text-align:right;vertical-align:top}
+.tbl th{background:var(--surface-2);font-weight:600}
+.num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+
+/* recurring exam ideas */
+.hot{margin-top:30px;background:var(--green);color:var(--band-fg);border-radius:var(--r);padding:18px 20px}
+.hot h3{color:#f3c64a;font-size:1.25rem;margin-bottom:8px}
+.hot ol{margin:0;padding-right:22px;display:flex;flex-direction:column;gap:6px}
+.hot li::marker{color:#f3c64a;font-weight:700}
+
+/* practice */
+.practice{margin-top:30px}
+.practice h3{font-size:1.4rem;margin-bottom:6px}
+.practice>p{margin:0 0 14px;color:var(--muted)}
+.qgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:760px){.qgrid{grid-template-columns:minmax(0,1fr)}}
+.mcq{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.mcq .q{font-weight:600}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.opt{border:1.5px solid var(--line);background:var(--bg);color:var(--fg);border-radius:10px;padding:7px 10px;text-align:right;cursor:pointer;font-size:.95rem}
+.opt:hover{border-color:var(--gold)}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--surface));}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface));}
+.fb{font-size:.9rem;color:var(--muted)}
+.fb b.ok{color:var(--ok)}.fb b.no{color:var(--bad)}
+.reveal{align-self:start;border:1.5px solid var(--green-2);color:var(--fg);background:transparent;border-radius:999px;padding:4px 16px;cursor:pointer;font-weight:600;font-size:.9rem}
+.reveal:hover{background:var(--surface-2)}
+.ans{background:var(--gold-soft);border-radius:10px;padding:8px 12px;font-size:.95rem}
+.score{margin-top:12px;font-weight:600;color:var(--muted)}
+
+
+[hidden]{display:none!important}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+@media (max-width:860px){.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:620px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.tile:last-child:nth-child(odd){grid-column:span 2}}
+.tile{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;background:var(--surface);color:var(--fg);border:2px solid var(--line);border-radius:18px;padding:20px 12px 16px;cursor:pointer;transition:transform .18s,border-color .18s}
+.tile:hover{transform:translateY(-3px);border-color:var(--gold)}
+.tile .ti{width:64px;height:64px;border-radius:50%;background:var(--green);color:#f3c64a;display:grid;place-items:center;border:3px solid var(--gold)}
+.tile .ti svg{width:34px;height:34px}
+.tile b{font-family:var(--f-display);font-size:1.12rem;font-weight:600}
+.tile em{font-style:normal;color:var(--muted);font-size:.86rem;line-height:1.5}
+@media (max-width:460px){.tiles{gap:10px}.tile{padding:14px 8px}.tile .ti{width:54px;height:54px}.tile b{font-size:1rem}}
+.subbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;justify-content:space-between;background:var(--surface-2);border-radius:12px;padding:8px 10px;margin-bottom:6px}
+.subbar button{border:1.5px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:4px 14px;cursor:pointer;font-size:.92rem}
+.subbar .back{background:var(--green);color:#f3c64a;border-color:var(--green);font-weight:700}
+.subbar .subname{font-family:var(--f-display);font-weight:600}
+.subbar .nav2{display:flex;gap:6px}
+.subbar button:disabled{opacity:.4;cursor:default}
+.sub-on{margin-top:14px!important}
+.navbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--green);border-bottom:3px solid var(--gold)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--green)}
+.navin{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding-block:8px}
+.navbar button{font-family:var(--f-body);font-weight:700;border:1.5px solid #ffffff40;background:#ffffff14;color:#f2f7f3;border-radius:999px;padding:6px 16px;cursor:pointer;font-size:.95rem}
+.navbar button:hover{background:#ffffff26}
+.navbar button.home{background:var(--gold);border-color:var(--gold);color:#1d1600}
+.navbar button:disabled{opacity:.35;cursor:default}
+.navbar .nbtns{display:flex;gap:8px}
+.ntitle{color:#f3c64a;font-family:var(--f-display);font-weight:600;font-size:1.05rem;flex:1;text-align:center;min-width:0}
+@media (max-width:520px){.ntitle{order:-1;flex-basis:100%}}
+.band.compact .title,.band.compact .motto{display:none}
+.band.compact .hero{flex-direction:row;justify-content:center;padding-block:14px;gap:14px}
+.band.compact .crest{width:64px;border-width:1px;box-shadow:none}.band.compact .crest img{width:38px}
+.band.compact .school{font-size:1.1rem;text-align:right}
+.doors{margin-bottom:40px}
+/* exams */
+.filters{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.frow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.frow>span{font-size:.85rem;color:var(--muted);min-width:64px}
+.chip{border:1.5px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:4px 14px;cursor:pointer;font-size:.9rem}
+.chip[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#f3c64a}
+.count{font-size:.9rem;color:var(--muted)}
+.exam-group{margin-top:26px}
+.exam-group>h3{font-size:1.15rem;display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.exam-group>h3 .yr{background:var(--gold);color:#1d1600;border-radius:8px;padding:0 10px;font-size:.95rem;direction:ltr;unicode-bidi:isolate}
+.qcards{display:flex;flex-direction:column;gap:16px}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.qcard header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.qcard header b{font-family:var(--f-display);font-size:1.05rem}
+.tag{font-size:.8rem;border-radius:999px;padding:1px 10px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid var(--gold)}
+.shot{display:block;width:100%;background:#fff;border:0;padding:10px;cursor:zoom-in;position:relative}
+.shot img{display:block;margin:0 auto;max-width:100%;height:auto}
+.shot .zoom{position:absolute;left:10px;top:10px;background:#0f4632dd;color:#fff;border-radius:8px;font-size:.78rem;padding:2px 8px}
+.qcard .bar{display:flex;gap:10px;align-items:center;padding:10px 14px;border-top:1px solid var(--line)}
+.showans{background:var(--green);color:#f3c64a;border:0;border-radius:999px;padding:7px 18px;font-weight:700;cursor:pointer;font-size:.95rem}
+.showans[aria-expanded="true"]{background:var(--surface-2);color:var(--fg);border:1.5px solid var(--line)}
+.ansbox{border-top:3px solid var(--gold)}
+.ansbox .lab{padding:8px 14px 0;font-weight:700;color:var(--gold-ink);font-size:.9rem}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:50;background:#06100cee;display:flex;flex-direction:column}
+.lb[hidden]{display:none}
+.lb .tools{display:flex;gap:8px;justify-content:center;align-items:center;padding:10px;padding-top:calc(10px + env(safe-area-inset-top,0px));color:#fff;flex-wrap:wrap}
+.lb .tools button{background:#ffffff1c;color:#fff;border:1px solid #ffffff40;border-radius:10px;min-width:44px;height:40px;font-size:1.1rem;cursor:pointer;padding:0 12px}
+.lb .tools .pct{min-width:56px;text-align:center;font-variant-numeric:tabular-nums;direction:ltr}
+.lb .stage{flex:1;overflow:auto;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));cursor:grab;touch-action:pan-x pan-y pinch-zoom}
+.lb .stage.drag{cursor:grabbing}
+.lb .stage img{display:block;margin:0 auto;background:#fff;border-radius:6px;max-width:none;user-select:none;-webkit-user-drag:none}
+
+/* credit */
+.credit{position:fixed;left:0;right:0;bottom:0;z-index:40;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(6px);border-top:1px solid var(--line);font-size:.78rem;color:var(--muted);text-align:center;padding:6px max(16px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.credit span{direction:ltr;unicode-bidi:isolate;color:var(--fg);user-select:all}
+.src{margin-top:26px;font-size:.85rem;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<script src="scorm.js"></script>
+</head>
+<body>
+
+
+<div class="band">
+  <div class="wrap hero">
+    <div class="crest"><img src="logo.png" alt="شعار مدرسة الفضل بن العباس"></div>
+    <div class="school">مدرسة الفضل بن العباس للتعليم الأساسي <small class="num">(7 - 10)</small></div>
+    <h1 class="title">ملخص واختبارات نهائية للوحدة الأولى (الشحنة الكهربائية)<span>للصف العاشر في مادة الفيزياء</span></h1>
+    <div class="motto">الفضل متعة وإجادة علمية بشراكة مجتمعية</div>
+  </div>
+</div>
+
+<nav class="navbar" id="navbar" hidden aria-label="التنقل">
+  <div class="wrap navin">
+    <button type="button" id="nBack">→ رجوع</button>
+    <span class="ntitle" id="nTitle"></span>
+    <span class="nbtns"><button type="button" id="nNext">التالي ←</button><button type="button" id="nHome" class="home">الرئيسية</button></span>
+  </div>
+</nav>
+<div class="wrap">
+  <div class="doors" role="group" aria-label="أقسام البرنامج">
+    <button class="door" id="d-summary" data-view="summary" aria-pressed="false">
+      <span class="ic"><svg viewBox="0 0 48 48" fill="none" stroke="#f3c64a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6h20l8 8v28H10z"/><path d="M30 6v8h8"/><path d="M16 22h16M16 29h16M16 36h10"/></svg></span>
+      <span><b>ملخص الوحدة</b></span>
+    </button>
+    <button class="door" id="d-exams" data-view="exams" aria-pressed="false">
+      <span class="ic"><svg viewBox="0 0 48 48" fill="none" stroke="#f3c64a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="7" width="30" height="36" rx="3"/><path d="M17 5h14v6H17z"/><path d="M16 22l3 3 6-6M16 33l3 3 6-6M29 23h4M29 34h4"/></svg></span>
+      <span><b>أسئلة اختبارات نهائية</b></span>
+    </button>
+  </div>
+
+  <!-- ================= SUMMARY ================= -->
+  <section class="panel" id="summary" hidden>
+    <div class="phead" id="sumHead"><h2>ملخص الوحدة الأولى: الشحنة الكهربائية</h2></div>
+    <div class="tiles" id="subTiles">
+      <button class="tile" type="button" data-sub="t-map"><span class="ti"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="6"/><circle cx="9" cy="10" r="4"/><circle cx="39" cy="10" r="4"/><circle cx="9" cy="38" r="4"/><circle cx="39" cy="38" r="4"/><path d="M19 20l-7-7M29 20l7-7M19 28l-7 7M29 28l7 7"/></svg></span><b>الخريطة الذهنية</b></button>
+      <button class="tile" type="button" data-sub="t1"><span class="ti"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M27 4L12 27h11l-3 17 16-24H25z"/></svg></span><b>1-1 الكهرباء الساكنة</b></button>
+      <button class="tile" type="button" data-sub="t2"><span class="ti"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="20" width="36" height="9" rx="4.5" transform="rotate(-20 24 24)"/><path d="M14 38c4-6 12-6 16 0M33 40l4-3M10 41l-3-3"/></svg></span><b>1-2 الاحتكاك والشحن</b></button>
+      <button class="tile" type="button" data-sub="t3"><span class="ti"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="7"/><path d="M21 24h6M24 21v6"/><path d="M24 4v8M24 36v8M4 24h8M36 24h8M10 10l6 6M32 32l6 6M38 10l-6 6M16 32l-6 6"/></svg></span><b>1-3 المجال الكهربائي</b></button>
+      <button class="tile" type="button" data-sub="t4"><span class="ti"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 24h14M30 24h14"/><rect x="18" y="16" width="12" height="16" rx="2"/><path d="M22 16v-6M26 16v-6M22 38v-6M26 38v-6"/></svg></span><b>1-4 الموصلات والعوازل</b></button>
+      <button class="tile" type="button" data-sub="t-hot"><span class="ti"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 4l5.5 11.5L42 17l-9 9 2 13-11-6-11 6 2-13-9-9 12.5-1.5z"/></svg></span><b>أفكار متكررة</b></button>
+      <button class="tile" type="button" data-sub="t-practice"><span class="ti"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="19"/><path d="M18 18a6 6 0 1 1 8 5.6c-1.4.6-2 1.6-2 3.4v1"/><circle cx="24" cy="34" r=".8" fill="currentColor"/></svg></span><b>أسئلة تدريبية</b></button>
+    </div>
+
+
+    <div class="map" id="t-map">
+      <h3>الخريطة الذهنية للوحدة</h3>
+      <div class="mm">
+        <div class="root">الشحنة الكهربائية</div>
+        <div class="stem"></div>
+        <div class="branches">
+          <div class="br"><div class="bt">الكهرباء الساكنة<small>1-1</small></div>
+            <ul><li>نوعان: موجبة (+) وسالبة (−)</li><li>المتشابهة تتنافر</li><li>المختلفة تتجاذب</li><li>تتراكم على أسطح المواد</li><li>التفريغ الكهربائي والبرق</li></ul></div>
+          <div class="br"><div class="bt">الاحتكاك والشحن<small>1-2</small></div>
+            <ul><li>الدلك ينقل الإلكترونات فقط</li><li>يكسب إلكترونات ← سالب</li><li>يفقد إلكترونات ← موجب</li><li>يلزم مادتان مختلفتان</li><li>المشحون يجذب غير المشحون</li></ul></div>
+          <div class="br"><div class="bt">المجال الكهربائي<small>1-3</small></div>
+            <ul><li>منطقة تتأثر فيها الشحنة بقوة</li><li>أقوى كلما اقتربنا من الجسم</li><li>الوحدة: الكولوم C</li><li>e = −1.6×10⁻¹⁹ C</li><li>توزيع الشحنات بالتأثير</li></ul></div>
+          <div class="br"><div class="bt">الموصلات والعوازل<small>1-4</small></div>
+            <ul><li>الموصل يسمح بمرور التيار</li><li>العازل لا يسمح بمروره</li><li>الفلزات + الجرافيت موصلات</li><li>البلاستيك والزجاج والخشب عوازل</li><li>التيار في الفلز تدفق إلكترونات</li></ul></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1-1 -->
+    <article class="topic" id="t1">
+      <header><span class="no">1-1</span><h3>الكهرباء الساكنة</h3></header>
+      <div class="cols">
+        <div class="note">
+          <ul>
+            <li>للشحنة الكهربائية نوعان: <span class="pos">موجبة (+)</span> و<span class="neg">سالبة (−)</span>.</li>
+            <li><b>الشحنات المتشابهة تتنافر، والشحنات المختلفة تتجاذب.</b></li>
+            <li>أمثلة يومية: شرارات عند خلع الملابس الصناعية، وخزة عند لمس باب السيارة (تسمّى <b>التفريغ الكهربائي</b>)، والبرق تيار كهربائي سريع من سحابة مشحونة.</li>
+            <li>مانعة الصواعق: ساق فلزية مدبّبة أعلى المبنى متصلة بسلك فلزي يمتد إلى الأرض.</li>
+          </ul>
+          <div class="term"><b>الكهرباء الساكنة:</b> هي الكهرباء الناتجة عن تراكم الشحنات الكهربائية على أسطح المواد.</div>
+          <div class="warn"><b>لا تخلط:</b> المغناطيسية تنشأ من أقطاب مغناطيسية، والكهرباء الساكنة تنشأ من شحنات كهربائية. المغناطيس لا يجذب الجسم المشحون.</div>
+        </div>
+        <figure class="fig" style="margin:0">
+          <svg viewBox="0 0 300 170" role="img" aria-label="ساقان مشحونتان بشحنتين مختلفتين تتجاذبان وبشحنتين متشابهتين تتنافران">
+            <g font-family="Almarai, Tahoma" font-size="13" text-anchor="middle">
+              <rect x="20" y="30" width="80" height="16" rx="8" fill="var(--pos)" opacity=".85"/><text x="60" y="42" fill="#fff" font-weight="700">+ + + +</text>
+              <rect x="20" y="58" width="80" height="16" rx="8" fill="var(--neg)" opacity=".85"/><text x="60" y="70" fill="#fff" font-weight="700">− − − −</text>
+              <path d="M110 44 l14 0 M110 60 l14 0" stroke="var(--fg)" stroke-width="2"/>
+              <text x="60" y="100" fill="var(--fg)" font-weight="700">مختلفة ← تجاذب</text>
+              <rect x="180" y="24" width="80" height="16" rx="8" fill="var(--neg)" opacity=".85"/><text x="220" y="36" fill="#fff" font-weight="700">− − − −</text>
+              <rect x="180" y="66" width="80" height="16" rx="8" fill="var(--neg)" opacity=".85"/><text x="220" y="78" fill="#fff" font-weight="700">− − − −</text>
+              <path d="M220 44 v-0 M215 48 l5 -6 l5 6 M215 62 l5 6 l5 -6" stroke="var(--fg)" stroke-width="2" fill="none"/>
+              <text x="220" y="100" fill="var(--fg)" font-weight="700">متشابهة ← تنافر</text>
+              <text x="150" y="150" fill="var(--muted)" font-size="12">القاعدة نفسها لأي جسمين مشحونين</text>
+            </g>
+          </svg>
+          <figcaption>قاعدة التجاذب والتنافر</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <!-- 1-2 -->
+    <article class="topic" id="t2">
+      <header><span class="no">1-2</span><h3>الاحتكاك والشحن الكهربائي</h3></header>
+      <div class="cols">
+        <div class="note">
+          <ul>
+            <li>قوة الاحتكاك (الدلك) تسبب الشحن بانتقال <b>الإلكترونات الحرة</b> من جسم إلى آخر. الإلكترونات ضعيفة الارتباط بالذرة فتُسحب بسهولة.</li>
+            <li><b>البروتونات لا تنتقل أبدًا</b>؛ الذي ينتقل هو الإلكترونات فقط.</li>
+            <li>الجسم الذي <b>يكسب</b> إلكترونات يصبح <span class="neg">سالبًا</span>، والذي <b>يفقد</b> إلكترونات يصبح <span class="pos">موجبًا</span>، وبالمقدار نفسه.</li>
+            <li>مثال الكتاب: دلك ساق الأبونايت (أو البلاستيك/البوليثين) بالصوف ← الساق <span class="neg">سالبة</span> والصوف <span class="pos">موجب</span>.</li>
+            <li>إنتاج الكهرباء الساكنة يتطلب <b>مادتين مختلفتين</b>؛ دلك قطعتي حرير معًا لا يولّد شحنة.</li>
+          </ul>
+          <div class="term"><b>الجسم المتعادل:</b> هو الجسم الذي يحتوي على عدد متساوٍ من الشحنات السالبة والموجبة.</div>
+          <div class="chain" style="margin-top:12px"><span>دلك جسمين مختلفين</span><i>←</i><span>انتقال إلكترونات</span><i>←</i><span>الكاسب: سالب</span><span>الفاقد: موجب</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <figure class="fig" style="margin:0">
+            <svg viewBox="0 0 300 150" role="img" aria-label="بالون سالب يقترب من حائط متعادل فتبتعد شحنات الحائط السالبة ويبقى سطحه موجبا فيلتصق البالون">
+              <g font-family="Almarai, Tahoma" font-size="12" text-anchor="middle">
+                <rect x="190" y="10" width="90" height="120" fill="var(--surface-2)" stroke="var(--line)"/>
+                <g fill="var(--pos)" font-weight="700" font-size="14"><text x="200" y="40">+</text><text x="200" y="65">+</text><text x="200" y="90">+</text><text x="200" y="115">+</text></g>
+                <g fill="var(--neg)" font-weight="700" font-size="14"><text x="262" y="40">−</text><text x="262" y="65">−</text><text x="262" y="90">−</text><text x="262" y="115">−</text></g>
+                <g fill="var(--pos)" font-size="12"><text x="232" y="52">+</text><text x="232" y="100">+</text></g><g fill="var(--neg)" font-size="12"><text x="240" y="76">−</text></g>
+                <ellipse cx="135" cy="68" rx="36" ry="44" fill="var(--gold-soft)" stroke="var(--gold)" stroke-width="2"/>
+                <g fill="var(--neg)" font-weight="700" font-size="14"><text x="120" y="55">−</text><text x="150" y="60">−</text><text x="125" y="85">−</text><text x="155" y="88">−</text><text x="138" y="40">−</text></g>
+                <path d="M135 112 q-10 14 4 30" stroke="var(--muted)" fill="none"/>
+                <text x="60" y="60" fill="var(--fg)">بالون سالب</text><text x="60" y="78" fill="var(--muted)">يجذب الحائط</text><text x="235" y="146" fill="var(--muted)">حائط متعادل</text>
+              </g>
+            </svg>
+            <figcaption>جذب الأجسام غير المشحونة: تبتعد إلكترونات سطح الحائط فيصبح السطح القريب موجبًا</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="note"><b>جذب الأجسام غير المشحونة:</b> المشحون يجذب قصاصات الورق والشعر وتيار الماء الرفيع. عند اقتراب جسم سالب تتنافر الإلكترونات وتبتعد، فيصبح الجزء الأقرب مشحونًا بشحنة مخالفة فيحدث التجاذب. لو استُبدلت الساق السالبة بأخرى موجبة <b>يبقى التجاذب</b> لأن الشحنات المخالفة تتجمع في الجهة القريبة.</div>
+    </article>
+
+    <!-- 1-3 -->
+    <article class="topic" id="t3">
+      <header><span class="no">1-3</span><h3>المجالات الكهربائية والشحنة الكهربائية</h3></header>
+      <div class="cols">
+        <div class="note">
+          <ul>
+            <li>يؤثر الجسم المشحون في الأجسام الأخرى (مشحونة أو غير مشحونة) <b>دون أن يلمسها</b>، بسبب المجال الكهربائي حوله.</li>
+            <li>القوة الكهربائية بين جسمين تعتمد على <b>مقدار شحنة كل منهما والبعد بينهما</b>؛ لذلك يكون المجال أقوى عند النقاط الأقرب للجسم المشحون.</li>
+            <li>وحدة قياس الشحنة <b>الكولوم (C)</b> في النظام الدولي.</li>
+            <li>شحنة الإلكترون <span class="num">−1.6 × 10⁻¹⁹ C</span>، وشحنة البروتون <span class="num">+1.6 × 10⁻¹⁹ C</span> (المقدار نفسه، والإشارة مختلفة).</li>
+            <li>القوة الكهربائية قوة أساسية: تربط الجسيمات في الذرة، والذرات في الجزيئات، والجزيئات في الأجسام.</li>
+          </ul>
+          <div class="term"><b>المجال الكهربائي:</b> منطقة حول الجسم المشحون تتعرض فيها الشحنات الكهربائية لقوة.</div>
+          <div class="chain" style="margin-top:12px"><span>بين إلكترون وبروتون</span><i>←</i><span>تجاذب</span><span>بين إلكترونين</span><i>←</i><span>تنافر</span></div>
+        </div>
+        <figure class="fig" style="margin:0">
+          <svg viewBox="0 0 300 180" role="img" aria-label="ساق موجبة بجوار كرة فلزية معزولة: الشحنات السالبة تتجمع في الجانب القريب والموجبة في الجانب البعيد">
+            <g font-family="Almarai, Tahoma" font-size="12" text-anchor="middle">
+              <rect x="40" y="25" width="18" height="110" rx="3" fill="var(--pos)" opacity=".85"/>
+              <g fill="#fff" font-weight="700" font-size="14"><text x="49" y="45">+</text><text x="49" y="68">+</text><text x="49" y="91">+</text><text x="49" y="114">+</text></g>
+              <circle cx="165" cy="70" r="46" fill="var(--surface-2)" stroke="var(--fg)" stroke-width="2"/>
+              <g fill="var(--neg)" font-weight="700" font-size="15"><text x="132" y="55">−</text><text x="126" y="75">−</text><text x="132" y="96">−</text></g>
+              <g fill="var(--pos)" font-weight="700" font-size="15"><text x="198" y="55">+</text><text x="204" y="75">+</text><text x="198" y="96">+</text></g>
+              <rect x="161" y="116" width="8" height="40" fill="var(--muted)"/><rect x="135" y="156" width="60" height="7" fill="var(--muted)"/>
+              <text x="240" y="140" fill="var(--muted)">حامل عازل</text>
+              <text x="49" y="155" fill="var(--fg)">ساق موجبة</text>
+              <text x="165" y="176" fill="var(--fg)" font-weight="700">القريب: مخالف ← تجاذب</text>
+            </g>
+          </svg>
+          <figcaption>توزيع الشحنات على كرة فلزية بالتأثير (بدون تلامس)</figcaption>
+        </figure>
+      </div>
+      <div class="note">
+        <b>حالات تتكرر عن الكرة الفلزية:</b>
+        <table class="tbl" style="margin-top:8px"><tbody>
+          <tr><th>لماذا تُحمل الكرة على عازل؟</th><td>حتى لا تتفرغ شحنتها؛ العازل لا يسمح بتدفق الشحنات من خلاله.</td></tr>
+          <tr><th>توصيل الكرة المشحونة بالأرض بسلك فلزي</th><td>تتفرغ شحنتها (تتدفق الإلكترونات) فتصبح متعادلة.</td></tr>
+          <tr><th>كرة متأثرة بساق سالبة ثم وُصل الجانب البعيد بالأرض</th><td>تتدفق الإلكترونات المتنافرة إلى الأرض وتبقى الكرة موجبة.</td></tr>
+          <tr><th>كرتان متساويتان بشحنتين مختلفتين وُصلتا بسلك نحاسي</th><td>تتعادل الشحنتان. لو وُصلتا بحزام مطاطي لا تتغير الشحنة لأنه عازل.</td></tr>
+        </tbody></table>
+      </div>
+    </article>
+
+    <!-- 1-4 -->
+    <article class="topic" id="t4">
+      <header><span class="no">1-4</span><h3>الموصلات الكهربائية والعوازل</h3></header>
+      <div class="cols">
+        <div class="note">
+          <div class="term" style="margin-top:0"><b>الموصل:</b> مادة تسمح بمرور التيار الكهربائي عبرها.<br><b>العازل:</b> مادة لا توصل التيار الكهربائي.</div>
+          <ul style="margin-top:10px">
+            <li>شدة التيار هي معدل تدفق الشحنة. الفلزات أفضل الموصلات، وأفضلها توصيلًا: النحاس والفضة والذهب. تُصنع الأسلاك عادة من النحاس لأنه الأقل تكلفة.</li>
+            <li>الجرافيت (في أقلام الرصاص) لافلز لكنه موصل.</li>
+            <li>العوازل لها مقاومة عالية جدًا؛ تُستخدم لتغليف الأسلاك والمقابس ولأقراص أبراج الكهرباء.</li>
+            <li>تتكون الشحنات الساكنة على العوازل لكنها لا تتحرك، ولا تتكون على الموصل إلا إذا كان معزولًا (على حامل عازل).</li>
+            <li>عند توصيل سلك فلزي بمصدر جهد: تتنافر الإلكترونات مع القطب السالب وينجذبها القطب الموجب، فتتدفق في السلك.</li>
+          </ul>
+        </div>
+        <div class="fig">
+          <table class="tbl"><thead><tr><th>موصلات</th><th>عوازل</th></tr></thead><tbody>
+            <tr><td>نحاس</td><td>بلاستيك</td></tr><tr><td>فضة، ذهب</td><td>زجاج</td></tr><tr><td>ألومنيوم</td><td>خشب</td></tr><tr><td>حديد، فولاذ</td><td>مطاط</td></tr><tr><td>جرافيت</td><td>صوف، قطن، حرير</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+      <div class="note">مثال: تُصنع أسلاك الدوائر من النحاس لأنه موصل جيد يسمح بتدفق التيار، وتُغلّف بالمطاط لأنه عازل يمنع تسرب التيار ويحمي من الصدمة. البالون السالب الذي يلامس قطعة فلزية كبيرة يفقد شحنته لأن الفلز موصل تتدفق عبره الإلكترونات.</div>
+    </article>
+
+    <div class="hot" id="t-hot">
+      <h3>أفكار تتكرر في الاختبارات النهائية</h3>
+      <ol>
+        <li>تحديد نوع الشحنة على الساق وقطعة القماش قبل الدلك (متعادل) وبعده (سالب وموجب).</li>
+        <li>شرح الشحن "بدلالة الجسيمات": انتقال الإلكترونات من … إلى …، ولا تذكر انتقال البروتونات.</li>
+        <li>رسم توزيع الشحنات على كرة فلزية عند تقريب ساق مشحونة منها، أو بعد توصيلها بالأرض.</li>
+        <li>تسمية المنطقة المحيطة بالجسم المشحون: <b>المجال الكهربائي</b>، وتحديد النقطة الأقوى مجالًا (الأقرب).</li>
+        <li>سبب حمل الكرة على عازل، وسبب انجذاب الماء أو الكرة غير المشحونة نحو الساق.</li>
+        <li>اختيار المادة الموصلة أو العازلة من قائمة، وتفسير استخدام النحاس والمطاط في الأسلاك.</li>
+      </ol>
+    </div>
+
+    <section class="practice" id="t-practice">
+      <h3>أسئلة تدريبية</h3>
+      <div class="qgrid" id="mcqs"></div>
+      <div class="score" id="score"></div>
+      <div class="qgrid" id="essays" style="margin-top:14px"></div>
+    </section>
+  </section>
+
+  <!-- ================= EXAMS ================= -->
+  <section class="panel" id="exams" hidden>
+    <div class="phead"><h2>أسئلة اختبارات نهائية – الوحدة الأولى</h2></div>
+    <div class="filters">
+      <div class="frow" id="f-topic"><span>الدرس</span></div>
+    </div>
+    <div id="examList"></div>
+  </section>
+</div>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="عرض الصورة مكبرة">
+  <div class="tools">
+    <button id="lb-close" aria-label="إغلاق">✕</button>
+    <button id="lb-out" aria-label="تصغير">−</button>
+    <span class="pct" id="lb-pct">100%</span>
+    <button id="lb-in" aria-label="تكبير">+</button>
+    <button id="lb-fit">ملاءمة</button>
+  </div>
+  <div class="stage" id="lb-stage"><img id="lb-img" alt=""></div>
+</div>
+
+<footer class="credit">إعداد: <span>ahmed.alabri01@moe.om</span></footer>
+
+<script>
+const EXAMS = [{"code":"A","year":"2024/2025","round":"الدور الأول","items":[{"n":1,"q":"img/A1_q.jpg","a":"img/A1_a.jpg","t":"1-2"},{"n":2,"q":"img/A2_q.jpg","a":"img/A2_a.jpg","t":"1-2"},{"n":3,"q":"img/A3_q.jpg","a":"img/A3_a.jpg","t":"1-3"},{"n":4,"q":"img/A4_q.jpg","a":"img/A4_a.jpg","t":"1-2"},{"n":5,"q":"img/A5_q.jpg","a":"img/A5_a.jpg","t":"1-4"},{"n":6,"q":"img/A6_q.jpg","a":"img/A6_a.jpg","t":"1-2"}]},{"code":"B","year":"2024/2025","round":"الدور الثاني","items":[{"n":1,"q":"img/B1_q.jpg","a":"img/B1_a.jpg","t":"1-2"},{"n":2,"q":"img/B2_q.jpg","a":"img/B2_a.jpg","t":"1-1"},{"n":3,"q":"img/B3_q.jpg","a":"img/B3_a.jpg","t":"1-1"},{"n":4,"q":"img/B4_q.jpg","a":"img/B4_a.jpg","t":"1-3"},{"n":5,"q":"img/B5_q.jpg","a":"img/B5_a.jpg","t":"1-2"},{"n":6,"q":"img/B6_q.jpg","a":"img/B6_a.jpg","t":"1-4"}]},{"code":"C","year":"2023/2024","round":"الدور الأول","items":[{"n":1,"q":"img/C1_q.jpg","a":"img/C1_a.jpg","t":"1-3"},{"n":2,"q":"img/C2_q.jpg","a":"img/C2_a.jpg","t":"1-3"},{"n":3,"q":"img/C3_q.jpg","a":"img/C3_a.jpg","t":"1-4"},{"n":4,"q":"img/C4_q.jpg","a":"img/C4_a.jpg","t":"1-2"},{"n":5,"q":"img/C5_q.jpg","a":"img/C5_a.jpg","t":"1-4"},{"n":6,"q":"img/C6_q.jpg","a":"img/C6_a.jpg","t":"1-4"}]},{"code":"D","year":"2023/2024","round":"الدور الثاني","items":[{"n":1,"q":"img/D1_q.jpg","a":"img/D1_a.jpg","t":"1-2"},{"n":2,"q":"img/D2_q.jpg","a":"img/D2_a.jpg","t":"1-1"},{"n":3,"q":"img/D3_q.jpg","a":"img/D3_a.jpg","t":"1-3"},{"n":4,"q":"img/D4_q.jpg","a":"img/D4_a.jpg","t":"1-3"},{"n":5,"q":"img/D5_q.jpg","a":"img/D5_a.jpg","t":"1-4"},{"n":6,"q":"img/D6_q.jpg","a":"img/D6_a.jpg","t":"1-2"},{"n":7,"q":"img/D7_q.jpg","a":"img/D7_a.jpg","t":"1-2"}]},{"code":"E","year":"2022/2023","round":"الدور الأول","items":[{"n":1,"q":"img/E1_q.jpg","a":"img/E1_a.jpg","t":"1-4"},{"n":2,"q":"img/E2_q.jpg","a":"img/E2_a.jpg","t":"1-3"},{"n":3,"q":"img/E3_q.jpg","a":"img/E3_a.jpg","t":"1-1"}]},{"code":"F","year":"2022/2023","round":"الدور الأول - الفترة المسائية","items":[{"n":1,"q":"img/F1_q.jpg","a":"img/F1_a.jpg","t":"1-4"},{"n":2,"q":"img/F2_q.jpg","a":"img/F2_a.jpg","t":"1-2"},{"n":3,"q":"img/F3_q.jpg","a":"img/F3_a.jpg","t":"1-3"},{"n":4,"q":"img/F4_q.jpg","a":"img/F4_a.jpg","t":"1-1"}]},{"code":"G","year":"2022/2023","round":"الدور الثاني","items":[{"n":1,"q":"img/G1_q.jpg","a":"img/G1_a.jpg","t":"1-4"},{"n":2,"q":"img/G2_q.jpg","a":"img/G2_a.jpg","t":"1-3"},{"n":3,"q":"img/G3_q.jpg","a":"img/G3_a.jpg","t":"1-3"}]}];
+const TOPICS = {"1-1":"الكهرباء الساكنة","1-2":"الاحتكاك والشحن","1-3":"المجال الكهربائي","1-4":"الموصلات والعوازل"};
+const AR = n => String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]);
+
+/* ---------- navigation ---------- */
+const SUBS=[...document.querySelectorAll('#subTiles .tile')].map(t=>({id:t.dataset.sub,name:t.querySelector('b').textContent}));
+const $=id=>document.getElementById(id);
+let cur={s:"home"},stack=[];
+function renderView(){
+  const s=cur.s, inSum=s==="summary"||s==="sub";
+  document.querySelector(".band").classList.toggle("compact",s!=="home");
+  document.querySelector(".doors").hidden=s!=="home";
+  $("navbar").hidden=s==="home";
+  $("summary").hidden=!inSum; $("exams").hidden=s!=="exams";
+  $("subTiles").hidden=s!=="summary"; $("sumHead").hidden=s!=="summary";
+  SUBS.forEach((x,k)=>{const el=$(x.id);el.hidden=!(s==="sub"&&cur.i===k);el.classList.toggle("sub-on",s==="sub"&&cur.i===k)});
+  $("nTitle").textContent= s==="summary"?"ملخص الوحدة": s==="sub"?SUBS[cur.i].name : s==="exams"?"أسئلة اختبارات نهائية":"";
+  const nx=$("nNext"); nx.hidden=s==="exams"; nx.disabled= s==="sub"&&cur.i===SUBS.length-1;
+  window.scrollTo(0,0);
+}
+function go(st){stack.push(cur);cur=st;renderView();}
+$("nBack").onclick=()=>{cur=stack.pop()||{s:"home"};renderView();};
+$("nHome").onclick=()=>{stack=[];cur={s:"home"};renderView();};
+$("nNext").onclick=()=>{ if(cur.s==="summary")go({s:"sub",i:0}); else if(cur.s==="sub"&&cur.i<SUBS.length-1)go({s:"sub",i:cur.i+1}); };
+document.querySelectorAll(".door").forEach(b=>b.addEventListener("click",()=>go({s:b.dataset.view})));
+$("subTiles").addEventListener("click",e=>{const t=e.target.closest(".tile");if(t)go({s:"sub",i:SUBS.findIndex(x=>x.id===t.dataset.sub)})});
+
+/* ---------- practice ---------- */
+const MCQ=[
+ ["ما الجسيمات التي تنتقل عند دلك ساق بلاستيكية بقطعة قماش؟",["الإلكترونات","البروتونات","النيوترونات","الذرات كاملة"],0,"ينتقل عدد من الإلكترونات الحرة فقط؛ البروتونات لا تتحرك."],
+ ["دُلك قضيب أبونايت بالصوف فاكتسب شحنة سالبة. ما شحنة الصوف؟",["موجبة","سالبة","متعادل","لا يمكن تحديدها"],0,"الصوف فقد الإلكترونات التي اكتسبها القضيب فأصبح موجبًا."],
+ ["ماذا تسمى المنطقة المحيطة بالجسم المشحون التي تتأثر فيها الشحنات بقوة؟",["المجال الكهربائي","المجال المغناطيسي","التفريغ الكهربائي","التيار الكهربائي"],0,"هذا تعريف المجال الكهربائي."],
+ ["أي المواد الآتية لا توصل التيار الكهربائي؟",["الزجاج","النحاس","الفضة","الجرافيت"],0,"الزجاج عازل، أما الجرافيت فلافلز موصل."],
+ ["وحدة قياس الشحنة الكهربائية في النظام الدولي هي:",["الكولوم C","الأمبير A","الفولت V","النيوتن N"],0,"الكولوم وحدة الشحنة، والأمبير وحدة شدة التيار."],
+ ["ما نوع القوة الناشئة بين إلكترونين؟",["تنافر","تجاذب","لا توجد قوة","تجاذب ثم تنافر"],0,"الإلكترونان شحنتان متشابهتان (سالبتان) فتتنافران."],
+ ["قُرّبت ساق موجبة من كرة فلزية معزولة غير مشحونة. ما شحنة الجانب القريب من الساق؟",["سالبة","موجبة","متعادل","نصفه موجب ونصفه سالب"],0,"تنجذب الإلكترونات نحو الساق الموجبة فيصبح الجانب القريب سالبًا."],
+ ["دُلكت قطعتا حرير متماثلتان معًا. ماذا يحدث؟",["لا تتولد كهرباء ساكنة","تصبح إحداهما موجبة","تصبحان سالبتين","تصبحان موجبتين"],0,"توليد الكهرباء الساكنة يتطلب مادتين مختلفتين."],
+ ["صح أم خطأ: تنتقل البروتونات من قطعة الصوف إلى قضيب الأبونايت عند دلكهما معًا.",["صح","خطأ"],1,"العبارة خاطئة؛ الذي ينتقل هو الإلكترونات فقط، والبروتونات لا تتحرك."],
+ ["صح أم خطأ: تكون شدة المجال الكهربائي أكبر عند النقاط الأقرب إلى الجسم المشحون.",["صح","خطأ"],0,"العبارة صحيحة؛ القوة الكهربائية تزداد كلما قلّ البعد عن الجسم المشحون."]
+];
+const ESS=[
+ ["لماذا يجب حمل الكرة الفلزية المشحونة بواسطة حامل عازل؟","حتى لا تتفرغ شحنتها؛ لأن العازل لا يسمح بتدفق الشحنات من خلاله، أما الموصل فينقلها إلى الأرض."],
+ ["اشرح بدلالة الجسيمات كيف يصبح البالون سالبًا عند دلكه بالشعر.","تنتقل الإلكترونات السالبة من الشعر إلى البالون، فيكسب البالون إلكترونات ويصبح سالبًا، ويفقد الشعر إلكترونات فيصبح موجبًا."],
+ ["فسّر انحناء تيار رفيع من الماء نحو ساق مشحونة.","المجال الكهربائي للساق يؤثر بقوة في شحنات الماء فتتحرك، ويصبح الجزء الأقرب مشحونًا بشحنة مخالفة لشحنة الساق، فتنشأ قوة تجاذب بين الساق والماء."],
+ ["عند تمشيط الشعر بمشط بلاستيكي، ماذا يحدث؟ فسّر ذلك تفسيرًا علميًا.","عند تمشيط الشعر بمشط بلاستيكي يحدث احتكاك بين المشط والشعر، مما يؤدي إلى انتقال الإلكترونات من مادة إلى أخرى. ونتيجة لذلك يكتسب المشط شحنة سالبة ويصبح الشعر موجب الشحنة. لذلك تنجذب خصلات الشعر إلى المشط أو تتنافر فيما بينها بسبب الكهرباء الساكنة."],
+ ["دُلك بالون بقطعة صوف ثم قُرّب من حائط غير مشحون فالتصق به. فسّر ذلك تفسيرًا علميًا.","عند دلك البالون بالصوف تنتقل الإلكترونات من الصوف إلى البالون، فيكتسب البالون شحنة سالبة ويصبح الصوف موجب الشحنة. وعند تقريب البالون من الحائط المتعادل يؤثر مجاله الكهربائي في شحنات سطح الحائط، فتتنافر الإلكترونات مع شحنة البالون وتبتعد قليلًا، فيصبح الجزء القريب من سطح الحائط موجب الشحنة. فتنشأ قوة تجاذب بين الشحنة السالبة على البالون والشحنة الموجبة على سطح الحائط، فيلتصق البالون بالحائط دون أن يكون الحائط مشحونًا في الأصل."],
+ ["لماذا تُصنع أسلاك الدوائر من النحاس وتُغلّف بالمطاط؟","النحاس موصل جيد يسمح بتدفق التيار وتكلفته أقل من الفضة والذهب، والمطاط عازل لا يسمح بمرور التيار فيحمي من الصدمة."]
+];
+let answered=0,correct=0;
+const mc=document.getElementById("mcqs");
+MCQ.forEach((q,i)=>{
+  const order=q[1].length===2?[0,1]:q[1].map((_,k)=>k).sort(()=>Math.random()-.5);
+  const box=document.createElement("div");box.className="mcq";
+  box.innerHTML=`<div class="q">${AR(i+1)}) ${q[0]}</div><div class="opts"></div><div class="fb" aria-live="polite"></div>`;
+  const opts=box.querySelector(".opts"),fb=box.querySelector(".fb");
+  order.forEach(k=>{const b=document.createElement("button");b.className="opt";b.type="button";b.textContent=q[1][k];
+    b.addEventListener("click",()=>{ if(box.dataset.done) return; box.dataset.done=1; answered++;
+      opts.querySelectorAll(".opt")[order.indexOf(q[2])].classList.add("right");
+      if(k===q[2]){correct++;fb.innerHTML=`<b class="ok">إجابة صحيحة.</b> ${q[3]}`}else{b.classList.add("wrong");fb.innerHTML=`<b class="no">الإجابة الصحيحة مظللة بالأخضر.</b> ${q[3]}`}
+      if(window.SCORM)SCORM.score(correct,MCQ.length);document.getElementById("score").textContent=`نتيجتك: ${AR(correct)} من ${AR(answered)} (أجبت عن ${AR(answered)} من ${AR(MCQ.length)})`;
+    });opts.appendChild(b);});
+  mc.appendChild(box);
+});
+const es=document.getElementById("essays");
+ESS.forEach((q,i)=>{const box=document.createElement("div");box.className="mcq";
+  box.innerHTML=`<div class="q">${AR(MCQ.length+i+1)}) ${q[0]}</div><button class="reveal" type="button" aria-expanded="false">أظهر الإجابة</button><div class="ans" hidden>${q[1]}</div>`;
+  const b=box.querySelector(".reveal"),a=box.querySelector(".ans");
+  b.addEventListener("click",()=>{a.hidden=!a.hidden;b.setAttribute("aria-expanded",!a.hidden);b.textContent=a.hidden?"أظهر الإجابة":"أخفِ الإجابة"});
+  es.appendChild(box);});
+
+/* ---------- exams ---------- */
+let fExam="all",fTopic="all";
+function chip(label,val,group,cur){const b=document.createElement("button");b.className="chip";b.type="button";b.textContent=label;b.setAttribute("aria-pressed",val===cur);
+  b.addEventListener("click",()=>{if(group==="e")fExam=val;else fTopic=val;group==="e"?buildFilters():buildFilters();render();});return b;}
+function buildFilters(){
+  const ft=document.getElementById("f-topic");
+  ft.querySelectorAll(".chip").forEach(c=>c.remove());
+  ft.appendChild(chip("الكل","all","t",fTopic));
+  Object.entries(TOPICS).forEach(([k,v])=>ft.appendChild(chip(`${k} ${v}`,k,"t",fTopic)));
+}
+function render(){
+  const list=document.getElementById("examList");list.innerHTML="";let n=0;
+  EXAMS.filter(e=>fExam==="all"||e.code===fExam).forEach(e=>{
+    const items=e.items.filter(it=>fTopic==="all"||it.t===fTopic); if(!items.length) return;
+    const g=document.createElement("section");g.className="exam-group";
+    g.innerHTML=`<h3><span class="yr">${e.year}</span> الفصل الدراسي الأول – ${e.round}</h3><div class="qcards"></div>`;
+    const wrap=g.querySelector(".qcards");
+    items.forEach(it=>{n++;
+      const c=document.createElement("article");c.className="qcard";
+      c.innerHTML=`<header><b>السؤال ${AR(it.n)}</b><span class="tag">${it.t} ${TOPICS[it.t]}</span></header>
+        <button class="shot" type="button" data-src="${it.q}" aria-label="تكبير صورة السؤال"><span class="zoom" aria-hidden="true">⤢</span><img loading="lazy" src="${it.q}" alt="السؤال ${it.n} من اختبار ${e.year} ${e.round}"></button>
+        <div class="bar"><button class="showans" type="button" aria-expanded="false">إظهار الإجابة</button></div>
+        <div class="ansbox" hidden><div class="lab">نموذج الإجابة</div><button class="shot" type="button" data-src="${it.a}" aria-label="تكبير صورة الإجابة"><span class="zoom" aria-hidden="true">⤢</span><img loading="lazy" src="${it.a}" alt="إجابة السؤال ${it.n}"></button></div>`;
+      const sb=c.querySelector(".showans"),ab=c.querySelector(".ansbox");
+      sb.addEventListener("click",()=>{ab.hidden=!ab.hidden;sb.setAttribute("aria-expanded",!ab.hidden);sb.textContent=ab.hidden?"إظهار الإجابة":"إخفاء الإجابة"});
+      wrap.appendChild(c);});
+    list.appendChild(g);});
+  
+}
+buildFilters();render();
+document.getElementById("examList").addEventListener("click",e=>{const s=e.target.closest(".shot");if(s)openLB(s.dataset.src,s.querySelector("img").alt)});
+
+/* ---------- lightbox ---------- */
+const lb=document.getElementById("lb"),li=document.getElementById("lb-img"),st=document.getElementById("lb-stage"),pct=document.getElementById("lb-pct");
+let z=1,nat=0,last=null;
+function fitW(){return Math.min(nat,st.clientWidth-24)||nat}
+function apply(){li.style.width=Math.round(fitW()*z)+"px";pct.textContent=Math.round(z*100)+"%"}
+function openLB(src,alt){last=document.activeElement;li.alt=alt||"";z=1;li.onload=()=>{nat=li.naturalWidth;apply()};li.src=src;lb.hidden=false;document.body.style.overflow="hidden";document.getElementById("lb-close").focus();if(li.complete&&li.naturalWidth){nat=li.naturalWidth;apply()}}
+function closeLB(){lb.hidden=true;document.body.style.overflow="";if(last)last.focus()}
+document.getElementById("lb-close").onclick=closeLB;
+document.getElementById("lb-in").onclick=()=>{z=Math.min(4,z+.25);apply()};
+document.getElementById("lb-out").onclick=()=>{z=Math.max(.5,z-.25);apply()};
+document.getElementById("lb-fit").onclick=()=>{z=1;apply()};
+li.addEventListener("dblclick",()=>{z=z>1?1:2;apply()});
+st.addEventListener("wheel",e=>{if(e.ctrlKey||e.metaKey){e.preventDefault();z=Math.min(4,Math.max(.5,z+(e.deltaY<0?.15:-.15)));apply()}},{passive:false});
+document.addEventListener("keydown",e=>{if(lb.hidden)return;if(e.key==="Escape")closeLB();if(e.key==="+"||e.key==="=")document.getElementById("lb-in").click();if(e.key==="-")document.getElementById("lb-out").click();});
+st.addEventListener("click",e=>{if(e.target===st)closeLB()});
+let drag=null;
+st.addEventListener("pointerdown",e=>{if(e.pointerType!=="mouse")return;drag={x:e.clientX,y:e.clientY,l:st.scrollLeft,t:st.scrollTop,m:false};st.classList.add("drag")});
+window.addEventListener("pointermove",e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>3)drag.m=true;st.scrollLeft=drag.l-dx;st.scrollTop=drag.t-dy});
+window.addEventListener("pointerup",()=>{drag=null;st.classList.remove("drag")});
+window.addEventListener("resize",()=>{if(!lb.hidden)apply()});
+
+/* ---------- start ---------- */
+const h=(location.hash||"").slice(1);
+if(h==="summary"||h==="exams"){stack=[{s:"home"}];cur={s:h};}
+renderView();
+</script>
+
+</body>
+</html>
